@@ -20,13 +20,18 @@ RUN apt-get update \
 		software-properties-common \
                 dirmngr \
                 ed \
+                gpg-agent \
 		less \
 		locales \
 		vim-tiny \
 		wget \
 		ca-certificates \
-        && add-apt-repository --enable-source --yes "ppa:marutter/rrutter4.0" \
-        && add-apt-repository --enable-source --yes "ppa:c2d4u.team/c2d4u4.0+"
+        && wget -q -O - https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc \
+                | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc  \
+        && add-apt-repository --yes "ppa:marutter/rrutter4.0" \
+        && add-apt-repository --yes "ppa:c2d4u.team/c2d4u4.0+" \
+        && add-apt-repository --yes "ppa:edd/misc"
+
 
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
