@@ -13,7 +13,7 @@ LABEL org.label-schema.license="GPL-2.0" \
 RUN useradd docker \
 	&& mkdir /home/docker \
 	&& chown docker:docker /home/docker \
-	&& addgroup docker staff
+	&& adduser docker staff
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
