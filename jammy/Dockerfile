@@ -10,10 +10,8 @@ LABEL org.label-schema.license="GPL-2.0" \
 ## Set a default user. Available via runtime flag `--user docker` 
 ## Add user to 'staff' group, granting them write privileges to /usr/local/lib/R/site.library
 ## User should also have & own a home directory (for rstudio or linked volumes to work properly). 
-RUN useradd docker \
-	&& mkdir /home/docker \
-	&& chown docker:docker /home/docker \
-	&& adduser docker staff
+RUN useradd -s /bin/bash -m docker \
+	&& usermod -a -G staff docker
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
@@ -56,8 +54,11 @@ RUN apt-get update \
  		 r-base-dev \
  		 r-recommended \
                  r-cran-docopt \
+	&& chown root:staff "/usr/local/lib/R/site-library" \
+	&& chmod g+ws "/usr/local/lib/R/site-library" \
   	&& ln -s /usr/lib/R/site-library/littler/examples/install.r /usr/local/bin/install.r \
  	&& ln -s /usr/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
+	&& ln -s /usr/lib/R/site-library/littler/examples/installBioc.r /usr/local/bin/installBioc.r \
  	&& ln -s /usr/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
  	&& ln -s /usr/lib/R/site-library/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
   	&& ln -s /usr/lib/R/site-library/littler/examples/update.r /usr/local/bin/update.r \
