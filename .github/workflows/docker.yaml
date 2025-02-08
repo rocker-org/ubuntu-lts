@@ -8,17 +8,17 @@ on:
 
 jobs:
   docker:
-    runs-on: ubuntu-${{ matrix.config.runs }}
-    name: ${{ matrix.config.tag }}-${{ matrix.config.runs }}
+    runs-on: ${{ matrix.config.runs }}
+    name: ${{ matrix.config.tag }}-${{ matrix.config.cpu }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          #- { directory: focal, tag: '20.04', runs: latest }
-          #- { directory: jammy, tag: '22.04', runs: latest }
-          - { directory: noble, tag: '24.04', runs: latest }
-          - { directory: noble, tag: '24.04', runs: 24.04-arm }
+          - { directory: focal, tag: '20.04', cpu: amd64, runs: ubuntu-latest }
+          - { directory: jammy, tag: '22.04', cpu: amd64, runs: ubuntu-latest }
+          - { directory: noble, tag: '24.04', cpu: amd64, runs: ubuntu-latest }
+          - { directory: noble, tag: '24.04', cpu: arm64, runs: ubuntu-24.04-arm }
         
     steps:
     - name: Checkout
@@ -41,4 +41,4 @@ jobs:
       with:
         push: true
         context: ${{ matrix.config.directory }}
-        tags: rocker/r-ubuntu:${{ matrix.config.tag }}
+        tags: rocker/r-ubuntu:${{ matrix.config.tag }},rocker/r-ubuntu:${{ matrix.config.directory }}
