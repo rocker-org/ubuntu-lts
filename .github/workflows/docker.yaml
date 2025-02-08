@@ -1,40 +1,43 @@
 name: docker
 
 on:
-  push:
-  schedule:
-  - cron: "22 3 25 * *"
-    
+  #push:
+  #schedule:
+  #- cron: "22 3 25 * *"
+  workflow_dispatch:
+
 jobs:
   docker:
-    runs-on: ubuntu-latest
-    name: ${{ matrix.config.tag }}
+    runs-on: ubuntu-${{ matrix.config.runs }}
+    name: ${{ matrix.config.tag }}-${{ matrix.config.runs }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - { directory: bionic,  tag: '18.04' }
-          - { directory: focal,   tag: '20.04' }
+          #- { directory: focal, tag: '20.04', runs: latest }
+          #- { directory: jammy, tag: '22.04', runs: latest }
+          - { directory: noble, tag: '24.04', runs: latest }
+          - { directory: noble, tag: '24.04', runs: 24.04-arm }
         
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     #- name: Set up QEMU
     #  uses: docker/setup-qemu-action@v1
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to DockerHub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v6
       with:
         push: true
         context: ${{ matrix.config.directory }}
