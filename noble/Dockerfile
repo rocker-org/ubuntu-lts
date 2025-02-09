@@ -23,19 +23,15 @@ RUN useradd -s /bin/bash -m docker \
                 gpg-agent \
 		less \
 		locales \
+                lsb-release \
 		vim-tiny \
-		wget \
-## Install key and setup marutter repo
-        && gpg --keyserver keyserver.ubuntu.com --recv-keys C8E868340AE02417DCF76B51F2B6E89C389782D0 \
-        && gpg --export --armor C8E868340AE02417DCF76B51F2B6E89C389782D0 > /etc/apt/trusted.gpg.d/marutter_key.asc \
-        && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/marutter_key.asc] https://ppa.launchpadcontent.net/marutter/rrutter4.0/ubuntu noble main" > /etc/apt/sources.list.d/marutter_ppa.list \
+## Install key and setup CRAN repo 
+## Alternate: 'https://ppa.launchpadcontent.net/marutter/rrutter4.0/ubuntu noble' with key C8E868340AE02417DCF76B51F2B6E89C389782D0
+        && gpg --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9 \
+        && gpg --export --armor 51716619E084DAB9 > /etc/apt/trusted.gpg.d/cran_key.asc \
+        && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/cran_key.asc] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" > /etc/apt/sources.list.d/cran.list \
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
         && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
-	&& locale-gen en_US.utf8 \
-	&& /usr/sbin/update-locale LANG=en_US.UTF-8
-
-## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
-RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 	&& locale-gen en_US.utf8 \
 	&& /usr/sbin/update-locale LANG=en_US.UTF-8
 
