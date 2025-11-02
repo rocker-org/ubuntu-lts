@@ -6,8 +6,8 @@ name: docker
 
 on:
   #push:
-  #schedule:
-  #- cron: "22 3 25 * *"
+  schedule:
+  - cron: "11 1 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -42,7 +42,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { directory: focal, tag: '20.04', cpu: amd64, runs: ubuntu-latest }
+          # now a one-element matrix ...
+          #- { directory: focal, tag: '20.04', cpu: amd64, runs: ubuntu-latest }
           - { directory: jammy, tag: '22.04', cpu: amd64, runs: ubuntu-latest }
     steps:
     - name: Checkout
